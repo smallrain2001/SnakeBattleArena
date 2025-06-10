@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Battle Arena - Multiplayer Snake Game | Play Free Online</title>
+    <meta name="description" content="Play Snake Battle Arena online! Join epic multiplayer snake battles, grow your snake, and dominate the arena. Classic snake game with modern multiplayer action!">
+    <meta name="keywords" content="snake game, snake battle, multiplayer snake, io games, snake arena, online snake game, slither game, snake.io">
+    <link rel="canonical" href="https://snakebattlearena.com/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Snake Battle Arena - Multiplayer Snake Game">
+    <meta property="og:description" content="Join epic multiplayer snake battles! Grow your snake and dominate the arena in this classic game with modern multiplayer action.">
+    <meta property="og:url" content="https://snakebattlearena.com/">
+    <meta property="og:type" content="website">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Apple-inspired color scheme with snake theme */
+        :root {
+            --snake-green: #4ADE80;
+            --snake-dark-green: #16A34A;
+            --apple-blue: #007AFF;
+            --apple-purple: #AF52DE;
+            --apple-orange: #FF9500;
+            --arena-gold: #F59E0B;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-frame {
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            border: 3px solid var(--snake-green);
+        }
+        
+        .snake-button {
+            background: linear-gradient(145deg, var(--snake-green), var(--snake-dark-green));
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+        }
+        
+        .snake-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.4);
+            background: linear-gradient(145deg, #22C55E, var(--snake-green));
+        }
+        
+        .feature-card {
+            background: rgba(74, 222, 128, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(74, 222, 128, 0.2);
+            border-color: var(--snake-green);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, var(--snake-green), var(--arena-gold), var(--apple-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .snake-trail {
+            background: linear-gradient(90deg, 
+                var(--snake-green) 0%, 
+                var(--snake-dark-green) 50%, 
+                var(--snake-green) 100%);
+            animation: snakeMove 2s ease-in-out infinite;
+        }
+        
+        @keyframes snakeMove {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.1); }
+        }
+        
+        .floating-snake {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse-green {
+            animation: pulseGreen 2s infinite;
+        }
+        
+        @keyframes pulseGreen {
+            0%, 100% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(74, 222, 128, 0.6); }
+        }
+        
+        @media (max-width: 768px) {
+            .game-frame {
+                height: 50vh;
+                min-height: 350px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .game-frame {
+                height: 70vh;
+                min-height: 500px;
+            }
+        }
+        
+        .arena-bg {
+            background: radial-gradient(circle at center, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <nav class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="text-3xl">🐍</div>
+                    <div class="text-2xl font-bold gradient-text">Snake Battle Arena</div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#game" class="hover:text-green-400 transition-colors font-medium">Play Game</a>
+                    <a href="#features" class="hover:text-green-400 transition-colors font-medium">Features</a>
+                    <a href="#leaderboard" class="hover:text-green-400 transition-colors font-medium">Leaderboard</a>
+                    <a href="#tips" class="hover:text-green-400 transition-colors font-medium">Tips</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-16 text-center arena-bg">
+        <div class="floating-snake">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 gradient-text">Snake Battle Arena</h1>
+        </div>
+        <p class="text-xl md:text-2xl mb-8 text-gray-300 max-w-4xl mx-auto">
+            🐍 Enter the ultimate multiplayer snake battlefield! Grow your snake, outmaneuver opponents, and become the longest serpent in the arena!
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button onclick="document.getElementById('game').scrollIntoView({behavior: 'smooth'})" 
+                    class="snake-button text-white px-10 py-4 rounded-full text-lg font-bold pulse-green">
+                🎮 Battle Now - Free!
+            </button>
+            <div class="text-green-400 font-medium">
+                ⚡ No Download Required | 🌍 Multiplayer Arena
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game" class="container mx-auto px-4 py-12">
+        <div class="glass-effect rounded-3xl p-6 md:p-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 gradient-text">
+                🏆 Live Battle Arena
+            </h2>
+            <div class="game-frame mx-auto max-w-6xl">
+                <iframe 
+                    src="https://snakeio.com/"
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    allowfullscreen
+                    title="Snake Battle Arena Game"
+                    class="w-full">
+                </iframe>
+            </div>
+            <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="glass-effect rounded-xl p-3">
+                    <div class="text-green-400 font-bold">🎯 Controls</div>
+                    <div class="text-sm text-gray-300">Mouse or Arrow Keys</div>
+                </div>
+                <div class="glass-effect rounded-xl p-3">
+                    <div class="text-yellow-400 font-bold">⚡ Speed Boost</div>
+                    <div class="text-sm text-gray-300">Click or Spacebar</div>
+                </div>
+                <div class="glass-effect rounded-xl p-3">
+                    <div class="text-purple-400 font-bold">🍎 Eat Food</div>
+                    <div class="text-sm text-gray-300">Grow Longer</div>
+                </div>
+                <div class="glass-effect rounded-xl p-3">
+                    <div class="text-red-400 font-bold">💀 Avoid</div>
+                    <div class="text-sm text-gray-300">Other Snake Bodies</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container mx-auto px-4 py-16">
+        <h2 class="text-5xl font-bold text-center mb-12 gradient-text">
+            🌟 Arena Features
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">🐍</div>
+                <h3 class="text-2xl font-bold mb-4 text-green-400">Multiplayer Battles</h3>
+                <p class="text-gray-300">Battle up to 500 players simultaneously in real-time snake warfare across massive arenas.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">⚡</div>
+                <h3 class="text-2xl font-bold mb-4 text-yellow-400">Speed Boost</h3>
+                <p class="text-gray-300">Use strategic speed bursts to escape danger or make aggressive plays, but watch your length!</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">🎨</div>
+                <h3 class="text-2xl font-bold mb-4 text-purple-400">Custom Skins</h3>
+                <p class="text-gray-300">Unlock dozens of unique snake skins and patterns to stand out in the arena.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">🏆</div>
+                <h3 class="text-2xl font-bold mb-4 text-orange-400">Leaderboards</h3>
+                <p class="text-gray-300">Compete for the top spot on daily, weekly, and all-time leaderboard rankings.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">🌍</div>
+                <h3 class="text-2xl font-bold mb-4 text-blue-400">Global Arena</h3>
+                <p class="text-gray-300">Play with snake masters from around the world in this ultimate survival challenge.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">📱</div>
+                <h3 class="text-2xl font-bold mb-4 text-pink-400">Cross-Platform</h3>
+                <p class="text-gray-300">Seamless gameplay across desktop, tablet, and mobile with optimized touch controls.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="container mx-auto px-4 py-16">
+        <div class="glass-effect rounded-3xl p-8 md:p-12">
+            <h2 class="text-5xl font-bold text-center mb-12 gradient-text">
+                🏆 Hall of Fame
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="glass-effect rounded-2xl p-6 mb-4">
+                        <div class="text-4xl mb-2">🥇</div>
+                        <div class="text-2xl font-bold text-yellow-400 mb-2">Daily Champion</div>
+                        <div class="text-lg text-gray-300">SnakeMaster2025</div>
+                        <div class="text-green-400 font-bold">Length: 15,847</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="glass-effect rounded-2xl p-6 mb-4">
+                        <div class="text-4xl mb-2">👑</div>
+                        <div class="text-2xl font-bold text-purple-400 mb-2">Arena Legend</div>
+                        <div class="text-lg text-gray-300">VenomStrike</div>
+                        <div class="text-green-400 font-bold">Length: 23,156</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="glass-effect rounded-2xl p-6 mb-4">
+                        <div class="text-4xl mb-2">⚡</div>
+                        <div class="text-2xl font-bold text-blue-400 mb-2">Speed Demon</div>
+                        <div class="text-lg text-gray-300">QuickSerpent</div>
+                        <div class="text-green-400 font-bold">Kills: 892</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section id="tips" class="container mx-auto px-4 py-16">
+        <h2 class="text-5xl font-bold text-center mb-12 gradient-text">
+            💡 Master Strategies
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div class="feature-card rounded-2xl p-8">
+                <h3 class="text-2xl font-bold mb-4 text-green-400">🎯 Coiling Technique</h3>
+                <p class="text-gray-300 mb-4">Circle smaller snakes to trap them, forcing them to crash into your body. This is the most effective hunting strategy for experienced players.</p>
+                <div class="snake-trail h-2 rounded-full"></div>
+            </div>
+            <div class="feature-card rounded-2xl p-8">
+                <h3 class="text-2xl font-bold mb-4 text-yellow-400">⚡ Speed Management</h3>
+                <p class="text-gray-300 mb-4">Use speed boost sparingly - only for escapes or critical attacks. Each boost costs you length, so timing is everything in the arena.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8">
+                <h3 class="text-2xl font-bold mb-4 text-purple-400">🍎 Food Priority</h3>
+                <p class="text-gray-300 mb-4">Target the glowing orbs from defeated snakes - they're worth much more than regular food and can rapidly increase your size.</p>
+            </div>
+            <div class="feature-card rounded-2xl p-8">
+                <h3 class="text-2xl font-bold mb-4 text-blue-400">🛡️ Defensive Play</h3>
+                <p class="text-gray-300 mb-4">Stay near the arena edges when you're small, and move to the center only when you're confident in your size and skills.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Rules -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="glass-effect rounded-3xl p-8 md:p-12">
+            <h2 class="text-4xl font-bold text-center mb-8 gradient-text">📋 Arena Rules</h2>
+            <div class="max-w-4xl mx-auto space-y-6 text-lg text-gray-200">
+                <p>
+                    <strong class="text-green-400">🎮 Objective:</strong> Grow your snake by eating food and defeating other players. Become the longest snake in the arena to claim victory and earn your place on the leaderboard.
+                </p>
+                <p>
+                    <strong class="text-yellow-400">⚡ Movement:</strong> Control your snake using mouse movement or arrow keys. Click or press spacebar for speed boost, but remember that boosting costs you length over time.
+                </p>
+                <p>
+                    <strong class="text-red-400">💀 Elimination:</strong> If your snake's head touches another snake's body, you're eliminated instantly. However, other snakes can crash into YOUR body safely - use this to your advantage!
+                </p>
+                <p>
+                    <strong class="text-purple-400">🍎 Growth:</strong> Eat the colorful food scattered around the arena to grow. When other snakes are eliminated, they leave behind valuable glowing orbs worth much more than regular food.
+                </p>
+                <p>
+                    <strong class="text-blue-400">🏆 Victory:</strong> There's no official "end" to the game - keep growing and climbing the leaderboard. Your best length is recorded and you can always try to beat your personal record!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="container mx-auto px-4 py-16 text-center">
+        <div class="glass-effect rounded-3xl p-8 md:p-12">
+            <h2 class="text-5xl font-bold mb-6 gradient-text">Ready to Dominate?</h2>
+            <p class="text-xl mb-8 text-gray-200 max-w-3xl mx-auto">
+                Join millions of players in the most addictive multiplayer snake game ever created. Will you become the arena champion?
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="document.getElementById('game').scrollIntoView({behavior: 'smooth'})" 
+                        class="snake-button text-white px-12 py-5 rounded-full text-xl font-bold">
+                    🚀 Enter Battle Arena!
+                </button>
+                <div class="text-gray-400">
+                    🎯 No Registration Required | ⚡ Instant Play
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect mt-16">
+        <div class="container mx-auto px-4 py-12">
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="text-4xl">🐍</div>
+                    <div class="text-3xl font-bold gradient-text">Snake Battle Arena</div>
+                </div>
+                <p class="text-gray-300 mb-6">The ultimate multiplayer snake gaming experience</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div class="text-center">
+                    <h4 class="text-lg font-bold text-green-400 mb-3">Quick Stats</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <div>🎮 Players Online: 50,000+</div>
+                        <div>🏆 Daily Battles: 1M+</div>
+                        <div>🌍 Countries: 150+</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-lg font-bold text-yellow-400 mb-3">Game Info</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <div>📱 Cross-Platform</div>
+                        <div>🆓 Completely Free</div>
+                        <div>⚡ Real-Time Multiplayer</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-lg font-bold text-purple-400 mb-3">Community</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <div>🎯 Fair Play Guaranteed</div>
+                        <div>🛡️ Safe Gaming Environment</div>
+                        <div>📈 Regular Updates</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center pt-8 border-t border-gray-700">
+                <p class="text-gray-400 mb-4">© 2025 SnakeBattleArena.com - Slither to Victory!</p>
+                <div class="flex justify-center space-x-6 text-sm text-gray-500">
+                    <a href="#" class="hover:text-green-400 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-green-400 transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-green-400 transition-colors">Contact Support</a>
+                    <a href="#" class="hover:text-green-400 transition-colors">Report Bug</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading effect for iframe
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            iframe.addEventListener('load', function() {
+                this.style.opacity = '1';
+                console.log('Snake Battle Arena loaded successfully!');
+            });
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Floating animation for hero elements
+            const heroTitle = document.querySelector('.floating-snake');
+            let floatDirection = 1;
+            
+            // Add mouse follow effect for snake emoji in header
+            const snakeEmoji = document.querySelector('header .text-3xl');
+            document.addEventListener('mousemove', function(e) {
+                if (snakeEmoji && window.innerWidth > 768) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                    snakeEmoji.style.transform = `translate(${x}px, ${y}px)`;
+                }
+            });
+        });
+
+        // Add click tracking for analytics (placeholder)
+        function trackGameStart() {
+            console.log('Snake Battle Arena - Game Started');
+            // Add your analytics tracking code here
+        }
+
+        // Add game start tracking to buttons
+        document.querySelectorAll('.snake-button').forEach(button => {
+            button.addEventListener('click', trackGameStart);
+        });
+    </script>
+</body>
+</html>
